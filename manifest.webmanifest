@@ -1,11 +1,11 @@
 {
-  "name": "tkrWallet",
-  "short_name": "tkrWallet",
-  "description": "Self-custody wallet for the Scratchpost stack. You hold the keys.",
+  "name": "laPurse",
+  "short_name": "laPurse",
+  "description": "Self-custody wallet for leSou. You hold the keys.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#12100e",
-  "theme_color": "#12100e",
+  "background_color": "#efe4cc",
+  "theme_color": "#efe4cc",
   "icons": [
     {
       "src": "icon.svg",

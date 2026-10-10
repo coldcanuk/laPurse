@@ -1,4 +1,4 @@
-/* tkrWallet — wallet crypto.
+/* laPurse — wallet crypto.
  *
  * The only file that touches private-key material. Built on top of the audited
  * @noble/@scure bundle (vendor/noble.js); this file holds OUR logic: mnemonic

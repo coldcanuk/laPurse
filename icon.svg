@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="24" fill="#1c1917"/>
-  <text x="64" y="78" text-anchor="middle" font-size="48" fill="#f3f0e6" font-family="Georgia, serif">tkr</text>
+  <rect width="128" height="128" fill="#1c1a16"/>
+  <rect x="8" y="8" width="112" height="112" fill="none" stroke="#d9b862" stroke-width="4"/>
+  <text x="64" y="86" text-anchor="middle" font-family="Times New Roman, Times, serif" font-size="78" fill="#d9b862">¢</text>
 </svg>

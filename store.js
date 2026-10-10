@@ -1,4 +1,4 @@
-/* tkrWallet — local vault store (IndexedDB).
+/* laPurse — local vault store (IndexedDB).
  *
  * Holds the encrypted vault blob (AES-GCM ciphertext + KDF params) plus
  * operator-private Send contacts and recent recipients. The plaintext

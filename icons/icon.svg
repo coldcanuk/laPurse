@@ -1,8 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="28" fill="#1c1917"/>
-  <g fill="#e8a33d">
-    <rect x="26" y="74" width="16" height="28" rx="6"/>
-    <rect x="56" y="50" width="16" height="52" rx="6"/>
-    <rect x="86" y="26" width="16" height="76" rx="6"/>
-  </g>
+  <rect width="128" height="128" fill="#1c1a16"/>
+  <rect x="8" y="8" width="112" height="112" fill="none" stroke="#d9b862" stroke-width="4"/>
+  <text x="64" y="86" text-anchor="middle" font-family="Times New Roman, Times, serif" font-size="78" fill="#d9b862">¢</text>
 </svg>

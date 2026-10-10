@@ -2,7 +2,7 @@
   "name": "tkrwallet-tools",
   "version": "0.0.0",
   "private": true,
-  "description": "Build-only tooling for tkrWallet. Never shipped to the browser.",
+  "description": "Build-only tooling for laPurse. Never shipped to the browser.",
   "devDependencies": {
     "@noble/curves": "^2.4.0",
     "@noble/hashes": "^2.4.0",

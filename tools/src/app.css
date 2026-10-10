@@ -1,4 +1,4 @@
-/* tkrWallet — Tailwind v4 source.
+/* laPurse — Tailwind v4 source.
  *
  * Compiled to /app.css, which IS committed. Two reasons that matters:
  *   1. The Chrome extension is loaded unpacked from the repo root, so the
@@ -21,39 +21,39 @@
 @source "../../ui.js";
 
 @theme {
-  /* ---- Surfaces: warm dark, carried over from the v1 cream/charcoal identity */
-  --color-ink-950: #12100e;
-  --color-ink-900: #1c1917;
-  --color-ink-850: #221e1b;
-  --color-ink-800: #2a2522;
-  --color-ink-700: #3a3431;
-  --color-ink-600: #4d4642;
+  /* GrenDex desk (grendex.lesou.org): paper, ink, brass, oxblood.
+   * Token names stay ink/cream/ember so the existing utilities retint
+   * without a class-by-class rewrite. */
+  --color-ink-950: #efe4cc; /* paper */
+  --color-ink-900: #f8f2e4; /* card */
+  --color-ink-850: #f4ebd6; /* panel */
+  --color-ink-800: #1c1a16; /* rules */
+  --color-ink-700: #1c1a16;
+  --color-ink-600: #4a443a;
 
-  /* ---- Text */
-  --color-cream-50: #faf8f2;
-  --color-cream-100: #f3f0e6;
-  --color-cream-300: #cfc8b8;
-  --color-cream-500: #a8a29e;
+  /* Text. Names say cream; values are ink on paper. */
+  --color-cream-50: #1c1a16;
+  --color-cream-100: #1c1a16;
+  --color-cream-300: #3a352c;
+  --color-cream-500: #5a5246;
 
-  /* ---- Brand accent: ember (warm amber/copper). Deliberately not Phantom
-   * violet — keep the tkr identity rather than cloning a competitor. */
-  --color-ember-300: #f2c078;
-  --color-ember-400: #e8a33d;
-  --color-ember-500: #d98a1f;
-  --color-ember-600: #b06e12;
+  /* Accent. Pressed chips use ember-400 as ink, with paper text. */
+  --color-ember-300: #d9b862; /* brass */
+  --color-ember-400: #1c1a16; /* ink */
+  --color-ember-500: #7b2226; /* oxblood */
+  --color-ember-600: #4a1014;
 
   /* ---- Semantic */
-  --color-up-400: #4ade80;
-  --color-down-400: #f87171;
-  --color-warn-400: #fbbf24;
+  --color-up-400: #2f6b3a;
+  --color-down-400: #7b2226;
+  --color-warn-400: #9e4716;
 
-  /* ---- Shape */
-  --radius-card: 1.25rem;
+  /* ---- Shape. The desk is square. */
+  --radius-card: 0;
 
-  /* ---- Elevation. Dark mode has no cheap light, so depth comes from a hairline
-   * highlight on top and a soft drop behind. */
-  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 32px -20px rgba(0, 0, 0, 0.9);
-  --shadow-tile: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -16px rgba(0, 0, 0, 0.85);
+  /* Hard offset, the GrenDex card shadow. */
+  --shadow-card: 4px 4px 0 #1c1a16;
+  --shadow-tile: 3px 3px 0 #1c1a16;
 }
 
 @layer base {
@@ -64,7 +64,36 @@
   :root {
     --safe-t: env(safe-area-inset-top, 0px);
     --safe-b: env(safe-area-inset-bottom, 0px);
-    color-scheme: dark;
+    color-scheme: light;
+  }
+
+  @font-face {
+    font-family: "Special Elite";
+    src: url("./fonts/special-elite-400.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Courier Prime";
+    src: url("./fonts/courier-prime-400.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Courier Prime";
+    src: url("./fonts/courier-prime-700.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Courier Prime";
+    src: url("./fonts/courier-prime-400i.woff2") format("woff2");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
   }
 
   /* One page scroller only: #main. Do not size the popup to the monitor
@@ -121,13 +150,68 @@
   body {
     margin: 0;
     background-color: var(--color-ink-950);
-    /* Depth: a faint warm glow at the top of the viewport over the ink base. */
-    background-image: radial-gradient(120% 55% at 50% 0%, #2a231c 0%, #12100e 55%);
-    background-attachment: fixed;
+    background-image: none;
     color: var(--color-cream-100);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: "Courier Prime", "Courier New", Courier, monospace;
     -webkit-font-smoothing: antialiased;
     overscroll-behavior-y: none;
+  }
+
+  /* Masthead. Same lockup GrenDex uses for the purse: ink plate, brass rule, typewriter name. */
+  .brand-mast {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2rem;
+  }
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    height: 1.75rem;
+    padding: 0 0.4rem;
+    background: #1c1a16;
+    color: #d9b862;
+    box-shadow: inset 0 0 0 2px #1c1a16, inset 0 0 0 3px #d9b862;
+    font-family: "Courier Prime", "Courier New", Courier, monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .brand-name {
+    font-family: "Special Elite", "Courier Prime", monospace;
+    font-size: 1.35rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    color: #1c1a16;
+  }
+
+  /* Square the phone-app radii. Status lamps become the desk's diamond. */
+  #app .rounded-full,
+  #app .rounded-card,
+  #app .rounded-lg,
+  #app .rounded-xl,
+  #app .rounded-2xl,
+  #app .rounded-md {
+    border-radius: 0;
+  }
+  #account-dot,
+  nav a .nav-dot {
+    border-radius: 0;
+    transform: rotate(45deg);
+  }
+  #app .ring-1,
+  #app .ring-2 {
+    --tw-ring-color: #1c1a16;
+  }
+  #app > header {
+    background: #f4ebd6;
+    border-bottom: 4px double #1c1a16;
+    backdrop-filter: none;
+  }
+  #account-drawer-backdrop {
+    background: rgba(28, 26, 22, 0.45);
   }
 
   .safe-t {
@@ -215,7 +299,7 @@
     bottom: 0;
     height: 2px;
     overflow: hidden;
-    background: rgba(217, 138, 31, 0.18);
+    background: rgba(169, 129, 47, 0.28);
   }
   .scratchpost-busy-bar::after {
     content: "";
@@ -244,10 +328,7 @@
       box-shadow: var(--shadow-card);
     }
     50% {
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.04),
-        0 0 0 1px rgba(232, 163, 61, 0.38),
-        0 12px 32px -16px rgba(217, 138, 31, 0.5);
+      box-shadow: 4px 4px 0 #a9812f;
     }
   }
   #wallet-value-card.tkr-busy-pulse {

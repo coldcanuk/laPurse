@@ -1,4 +1,4 @@
-/* tkrWallet — data layer.
+/* laPurse — data layer.
  *
  * This is the ONLY file that makes network calls: fetch to the wallet edge for
  * balances and prices. The single origin is BASE_URL; the test suite greps
