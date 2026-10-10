@@ -19,7 +19,7 @@ are the same files.
 Override the outfile with `OUTFILE=` for a per-user EVM wallet:
 
 ```sh
-OUTFILE="$HOME/.config/tkrwallet/users/example.json" \
+OUTFILE="$HOME/.config/lapurse/users/example.json" \
   ./scripts/new_evm_wallet.sh --silent --no-secret
 ```
 

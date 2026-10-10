@@ -1,6 +1,6 @@
 # Tailwind Plus usage policy
 
-**Applies to:** tkrWallet (`coldcanuk/tkrWallet`), which is **GPLv3 and public**.
+**Applies to:** laPurse (`coldcanuk/laPurse`), which is **GPLv3 and public**.
 
 Two Tailwind Plus kits are used as design reference:
 
@@ -29,7 +29,7 @@ So there are two distinct acts, and only one of them is a problem:
 | Using Tailwind Plus components to **build the wallet** — adapting markup, styles and patterns into our own screens | ✅ Yes, explicitly |
 | Committing **a copy of the kit itself** to this public repo | ❌ No — that is repackaging and redistributing the component library |
 
-**tkrWallet is a wallet, not a UI kit.** What we build with these components is
+**laPurse is a wallet, not a UI kit.** What we build with these components is
 squarely the permitted case. A checked-in `application-ui-v4/` directory is not.
 
 ---
@@ -81,7 +81,7 @@ Application UI examples mostly lack. Measured from the kit's own sources:
 | `data-*` state attributes | Headless UI convention | we use the same, hand-rolled |
 
 Colours stay **warm** (`ink` / `cream` / `ember`) rather than Catalyst's neutral
-`zinc`. The brand is tkrWallet's; what we borrow is the craft, not the palette.
+`zinc`. The brand is laPurse's; what we borrow is the craft, not the palette.
 
 ---
 

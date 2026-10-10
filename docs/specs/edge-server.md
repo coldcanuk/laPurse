@@ -61,7 +61,7 @@ ARCHITECTURE}.md` and `theticker/README.md`, so it is load-bearing.
 
 Do **not** remove it. Add exactly one named exception and leave the guard up:
 
-> `scratchpost.ai` is used **only** for `wallet.scratchpost.ai`, the tkrWallet
+> `scratchpost.ai` is used **only** for `wallet.scratchpost.ai`, the laPurse
 > customer UA. Every other `scratchpost.ai` hostname remains unauthorised, and
 > there is still no Scratchpost portal.
 
@@ -280,7 +280,7 @@ The client may instead broadcast through its own provider; supporting both is
 fine, requiring either is not.
 
 Long-chain ids are already agreed: **ETH 1, Base 8453, Robinhood 4663,
-Solana 900001** (tickerpicker's `ChainSolana = 900_001` matches tkrWallet's
+Solana 900001** (tickerpicker's `ChainSolana = 900_001` matches laPurse's
 constant exactly).
 
 ### 3.5 Token catalogue — required for real search

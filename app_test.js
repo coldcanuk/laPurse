@@ -1,4 +1,4 @@
-// tkrWallet — test suite (named harness).
+// laPurse — test suite (named harness).
 //
 // Run: node app_test.js   (or npm test)
 //
@@ -2763,7 +2763,9 @@ test("desk UX: airdrops submenu, receive QR, send contacts, live quote estimate"
   assert.ok(ui.indexOf("quoteStillLive") !== -1);
   assert.ok(ui.indexOf("accepted: false") !== -1);
   assert.ok(html.indexOf("media-src 'self' blob:") !== -1, "camera needs media-src");
-  const nginx = readFile("deploy/nginx/tkrwallet-edge.conf.template");
+  const nginx = readFile("deploy/nginx/wallet-edge.conf.template");
+  assert.ok(nginx.indexOf("server_name wallet.scratchpost.ai;") !== -1, "vhost name is the wholesale origin");
+  assert.ok(nginx.toLowerCase().indexOf("tkrwallet") === -1, "vhost must not name tkrwallet");
   assert.ok(nginx.indexOf("media-src 'self' blob:") !== -1, "edge nginx must allow camera blobs");
   assert.ok(nginx.indexOf("camera=(self)") !== -1, "edge nginx must allow same-origin camera");
   assert.ok(ui.indexOf("paintReceiveQr") !== -1);

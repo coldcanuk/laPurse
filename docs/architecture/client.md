@@ -1,4 +1,4 @@
-# tkrWallet — Client Architecture
+# laPurse — Client Architecture
 
 Frozen at M2.1. Changes to this contract change the tests, which are the
 enforcement of the audit.
