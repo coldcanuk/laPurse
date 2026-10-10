@@ -1,6 +1,6 @@
 # Deploying the laPurse edge
 
-The wallet's counterparty is the icehut edge. `nginx/tkrwallet-edge.conf.template`
+The wallet's counterparty is the icehut edge. `nginx/wallet-edge.conf.template`
 is the hardened vhost for `https://wallet.scratchpost.ai`, carrying every fix
 from `docs/security/security-audit.md` (R-1…R-12).
 
@@ -22,10 +22,10 @@ sed -e 's|{{SSL_FULLCHAIN}}|/etc/nginx/certs/wallet.fullchain.pem|' \
     -e 's|{{CF_ORIGIN_PULL_CA}}|/etc/nginx/certs/cf-origin-pull-ca.pem|' \
     -e 's|{{FACADE_UPSTREAM}}|http://127.0.0.1:8089|' \
     -e 's|{{WALLET_ROOT}}|/srv/tkrwallet|' \
-    nginx/tkrwallet-edge.conf.template \
-    > /etc/nginx/sites-available/tkrwallet-edge
+    nginx/wallet-edge.conf.template \
+    > /etc/nginx/sites-available/wallet-edge
 
-ln -sfn /etc/nginx/sites-available/tkrwallet-edge /etc/nginx/sites-enabled/tkrwallet-edge
+ln -sfn /etc/nginx/sites-available/wallet-edge /etc/nginx/sites-enabled/wallet-edge
 nginx -t && systemctl reload nginx
 ```
 

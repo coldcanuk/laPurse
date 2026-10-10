@@ -179,7 +179,7 @@ extension. Do not pick `/opt/repo` in any file dialog.
 
 The edge is specified in `docs/specs/edge-server.md` — built to fit, not
 reverse-engineered. A hardened nginx vhost template ships in
-`deploy/nginx/tkrwallet-edge.conf.template`.
+`deploy/nginx/wallet-edge.conf.template`.
 
 ## What it is not
 
