@@ -2766,6 +2766,9 @@ test("desk UX: airdrops submenu, receive QR, send contacts, live quote estimate"
   const nginx = readFile("deploy/nginx/wallet-edge.conf.template");
   assert.ok(nginx.indexOf("server_name wallet.scratchpost.ai;") !== -1, "vhost name is the wholesale origin");
   assert.ok(nginx.toLowerCase().indexOf("tkrwallet") === -1, "vhost must not name tkrwallet");
+  const deployReadme = readFile("deploy/README.md");
+  assert.ok(deployReadme.indexOf("/srv/lapurse") !== -1, "install root is /srv/lapurse");
+  assert.ok(deployReadme.indexOf("/srv/tkrwallet") === -1, "install recipe must not name tkrwallet");
   assert.ok(nginx.indexOf("media-src 'self' blob:") !== -1, "edge nginx must allow camera blobs");
   assert.ok(nginx.indexOf("camera=(self)") !== -1, "edge nginx must allow same-origin camera");
   assert.ok(ui.indexOf("paintReceiveQr") !== -1);
