@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Pack tkrWallet on kiff. Vault stays on ATHENA (headless).
+# Pack laPurse on kiff. Vault stays on ATHENA (headless).
 # Usage: ./scripts/pack-crx.sh
-# Native Chrome/Brave (Pop Shop deb) writes $HOME/tkrwallet.crx.
+# Native Chrome/Brave (Pop Shop deb) writes $HOME/laPurse.crx.
 # Flatpak cannot --pack-extension (bwrap /run/user/1000/doc). In that
-# case this script stages $HOME/tkrWallet-unpacked and stops. Never
+# case this script stages $HOME/laPurse-unpacked and stops. Never
 # writes a CRX into /opt/repo. Shreds the PEM.
 set -euo pipefail
 
@@ -11,15 +11,15 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ATHENA="chuck@athena.local"
 VAULT_OPS="/opt/repo/thePlatform/blockchain-infrastructure/host/vault/vault_ops.py"
 VAULT_PATH="theplatform/tkrwallet/chrome-crx-key"
-PACK="$HOME/tkrwallet-pack"
+PACK="$HOME/laPurse-pack"
 STAGE="$PACK/ext"
 KEY="$PACK/key.pem"
 PUB="$PACK/pub.der"
 PACK_PROFILE="$PACK/pack-profile"
-HOME_CRX="$HOME/tkrwallet.crx"
+HOME_CRX="$HOME/laPurse.crx"
 # Chrome UI "Pack extension" writes this exact name next to $HOME.
 CRX_ID="kfgmpcgplemjepolfpdbodmakceacook"
-CHROME_PEM="$HOME/tkrWallet-chrome-extension-${CRX_ID}.pem"
+CHROME_PEM="$HOME/laPurse-chrome-extension-${CRX_ID}.pem"
 PACK_CMD=()
 CHROME_UI=()
 BRAVE_UI=()
@@ -94,11 +94,11 @@ stage_home_unpacked() {
   echo
   echo "  1. chrome://extensions and brave://extensions"
   echo "  2. Developer mode on"
-  echo "  3. Remove tkrWallet if it is already loaded"
-  echo "  4. Load unpacked → $HOME/tkrWallet-unpacked"
+  echo "  3. Remove laPurse if it is already loaded"
+  echo "  4. Load unpacked → $HOME/laPurse-unpacked"
   echo
-  echo "Home card must read tkrWallet $VER."
-  echo "Site access for tkrwallet.scratchpost.ai must not be On click."
+  echo "Home card must read laPurse $VER."
+  echo "Site access for wallet.scratchpost.ai must not be On click."
 }
 
 scrub() {

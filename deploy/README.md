@@ -1,4 +1,4 @@
-# Deploying the tkrWallet edge
+# Deploying the laPurse edge
 
 The wallet's counterparty is the icehut edge. `nginx/tkrwallet-edge.conf.template`
 is the hardened vhost for `https://wallet.scratchpost.ai`, carrying every fix

@@ -151,7 +151,7 @@ git pull
 ```
 
 Then chrome://extensions and brave://extensions → Remove laPurse →
-Load unpacked → `/home/chuck/tkrWallet-unpacked`. Do not pick `/opt/repo`
+Load unpacked → `/home/chuck/laPurse-unpacked`. Do not pick `/opt/repo`
 in the file dialog.
 
 The home card must read **laPurse 0.10.40**. If it does not, the browser
@@ -164,7 +164,7 @@ is not this tree. Site access for `wallet.scratchpost.ai` must not be
 Packed CRX is only for Pop Shop **deb** Chrome or Brave. Vault stays on
 ATHENA. The script never uses Flatpak as the packer and never writes a
 CRX into `/opt/repo`. If only Flatpak is installed it stages
-`$HOME/tkrWallet-unpacked` and stops.
+`$HOME/laPurse-unpacked` and stops.
 
 ```sh
 cd /opt/repo/thePlatform/laPurse
@@ -172,7 +172,7 @@ git pull
 ./scripts/pack-crx.sh
 ```
 
-Drag `/home/chuck/tkrwallet.crx` if a CRX was written. Do not click Pack
+Drag `/home/chuck/laPurse.crx` if a CRX was written. Do not click Pack
 extension. Do not pick `/opt/repo` in any file dialog.
 
 ## Edge contract

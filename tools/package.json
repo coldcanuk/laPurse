@@ -1,5 +1,5 @@
 {
-  "name": "tkrwallet-tools",
+  "name": "lapurse-tools",
   "version": "0.0.0",
   "private": true,
   "description": "Build-only tooling for laPurse. Never shipped to the browser.",

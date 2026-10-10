@@ -8,7 +8,9 @@
 (function (root) {
   "use strict";
 
-  var DB_NAME = "tkrwallet";
+  var DB_NAME = "lapurse";
+  /* One-time copy so a vault saved under the old name still opens. */
+  var OLD_DB_NAME = "tkrwallet";
   var DB_VERSION = 4;
   var STORE = "vault";
   var META = "meta";
@@ -23,13 +25,13 @@
   var RECENT = "recent_recipients";
   var ACTIVITY = "activity";
 
-  function openDb() {
+  function openNamed(name, version) {
     return new Promise(function (resolve, reject) {
       if (!root.indexedDB) {
         reject(new Error("no-indexeddb"));
         return;
       }
-      var req = root.indexedDB.open(DB_NAME, DB_VERSION);
+      var req = version == null ? root.indexedDB.open(name) : root.indexedDB.open(name, version);
       req.onupgradeneeded = function () {
         var db = req.result;
         if (!db.objectStoreNames.contains(STORE)) {
@@ -55,6 +57,89 @@
       req.onerror = function () {
         reject(req.error || new Error("indexeddb-open-failed"));
       };
+    });
+  }
+
+  function idbRequest(req) {
+    return new Promise(function (resolve, reject) {
+      req.onsuccess = function () {
+        resolve(req.result);
+      };
+      req.onerror = function () {
+        reject(req.error || new Error("indexeddb-failed"));
+      };
+    });
+  }
+
+  function copyStore(oldDb, newDb, storeName) {
+    if (!oldDb.objectStoreNames.contains(storeName) || !newDb.objectStoreNames.contains(storeName)) {
+      return Promise.resolve();
+    }
+    var oldStore = oldDb.transaction(storeName, "readonly").objectStore(storeName);
+    return Promise.all([idbRequest(oldStore.getAllKeys()), idbRequest(oldStore.getAll())]).then(function (pair) {
+      var keys = pair[0] || [];
+      var vals = pair[1] || [];
+      return new Promise(function (resolve, reject) {
+        var writeTx = newDb.transaction(storeName, "readwrite");
+        var next = writeTx.objectStore(storeName);
+        var i;
+        for (i = 0; i < vals.length; i++) {
+          if (next.keyPath == null) {
+            next.put(vals[i], keys[i]);
+          } else {
+            next.put(vals[i]);
+          }
+        }
+        writeTx.oncomplete = function () {
+          resolve();
+        };
+        writeTx.onerror = function () {
+          reject(writeTx.error || new Error("indexeddb-copy-failed"));
+        };
+      });
+    });
+  }
+
+  function migrateLegacyDb() {
+    if (!root.indexedDB || typeof root.indexedDB.databases !== "function") {
+      return Promise.resolve();
+    }
+    return root.indexedDB.databases().then(function (list) {
+      var names = (list || []).map(function (d) {
+        return d && d.name;
+      });
+      if (names.indexOf(DB_NAME) !== -1 || names.indexOf(OLD_DB_NAME) === -1) {
+        return;
+      }
+      return openNamed(OLD_DB_NAME).then(function (oldDb) {
+        return openNamed(DB_NAME, DB_VERSION).then(function (newDb) {
+          var stores = [STORE, META, CONTACTS, RECENT, ACTIVITY];
+          var chain = Promise.resolve();
+          stores.forEach(function (storeName) {
+            chain = chain.then(function () {
+              return copyStore(oldDb, newDb, storeName);
+            });
+          });
+          return chain.then(function () {
+            oldDb.close();
+            newDb.close();
+            return new Promise(function (resolve) {
+              var del = root.indexedDB.deleteDatabase(OLD_DB_NAME);
+              del.onsuccess = del.onerror = del.onblocked = function () {
+                resolve();
+              };
+            });
+          });
+        });
+      });
+    }).catch(function () {
+      return;
+    });
+  }
+
+  function openDb() {
+    return migrateLegacyDb().then(function () {
+      return openNamed(DB_NAME, DB_VERSION);
     });
   }
 
@@ -324,7 +409,7 @@
     var acc;
     var w;
     var watch;
-    lines.push("tkrwallet_config: 1");
+    lines.push("lapurse_config: 1");
     lines.push("exported_at: " + yamlString(exportedAt));
     lines.push("preferences:");
     lines.push(

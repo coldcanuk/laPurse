@@ -1,4 +1,4 @@
-/* tkrWallet dev edge — a local stand-in for the wallet edge.
+/* laPurse dev edge — a local stand-in for the wallet edge.
  *
  * Serves the app AND /api/* from ONE origin so the single-origin CSP
  * (connect-src 'self') is satisfied, exactly as in production. Balances are
@@ -567,7 +567,7 @@ function nonceHandler(req) {
   const nonce = nodeCrypto.randomBytes(32).toString("hex");
   const issued = Date.now();
   const expires = issued + NONCE_TTL_MS;
-  const statement = "Connect to tkrWallet.\nNonce: " + nonce;
+  const statement = "Connect to laPurse.\nNonce: " + nonce;
   nonces.set(nonce, { statement: statement, issued_at: issued, expires_at: expires });
   return json(200, {
     nonce: nonce,
@@ -673,7 +673,7 @@ const server = http.createServer(function (req, res) {
 
 if (require.main === module) {
   server.listen(PORT, "127.0.0.1", function () {
-    console.log("tkrWallet dev edge on http://127.0.0.1:" + PORT);
+    console.log("laPurse dev edge on http://127.0.0.1:" + PORT);
     console.log("  app + /api/* on one origin (CSP connect-src 'self' satisfied)");
     console.log("  balances: public chain RPCs (server-side); prices: CoinGecko (dev-only)");
     console.log("  NOTE: the vault lives in IndexedDB, which is per ORIGIN. A different PORT");

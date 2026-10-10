@@ -1,4 +1,4 @@
-/* tkrWallet QR encoder.
+/* laPurse QR encoder.
  * Bundled from uqr (MIT). Copyright (c) Project Nayuki; Copyright (c) 2023 Anthony Fu.
  * Encode only — the wallet draws modules on a canvas. Never insert HTML.
  */

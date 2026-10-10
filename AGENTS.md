@@ -1,4 +1,4 @@
-# tkrWallet — agent instructions
+# laPurse — agent instructions
 
 ## Prime Directive
 

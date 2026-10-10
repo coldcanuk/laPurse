@@ -3,7 +3,7 @@
 # bind a stale /run/user/1000/doc portal snapshot of /opt/repo.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-DEST="${HOME}/tkrWallet-unpacked"
+DEST="${HOME}/laPurse-unpacked"
 mkdir -p "$DEST"
 rsync -a --delete \
   --exclude '.git/' \

@@ -17,11 +17,44 @@
   var ACCOUNT_COLORS = ["#e8a33d", "#a8a29e", "#4ade80", "#cfc8b8", "#d98a1f"];
   var DEFAULT_SCREEN = "home";
   var CURRENCIES = ["usd", "cad", "mxn"];
-  var STORAGE_KEY = "tkrwallet.currency";
-  var LEAVE_GAS_KEY = "tkrwallet.leave-gas-buffer";
-  var AUTOLOCK_KEY = "tkrwallet.autolock";
-  var CONNECT_AT_LAUNCH_KEY = "tkrwallet.connectAtLaunch";
-  var VIEW_SESSION_KEY = "tkrwallet.view-session";
+  var STORAGE_KEY = "lapurse.currency";
+  var LEAVE_GAS_KEY = "lapurse.leave-gas-buffer";
+  var AUTOLOCK_KEY = "lapurse.autolock";
+  var CONNECT_AT_LAUNCH_KEY = "lapurse.connectAtLaunch";
+  var VIEW_SESSION_KEY = "lapurse.view-session";
+  var TOKENS_KEY = "lapurse.tokens";
+
+  function moveStored(store, nextKey, prevKey) {
+    if (!store) {
+      return;
+    }
+    try {
+      if (store.getItem(nextKey) == null && store.getItem(prevKey) != null) {
+        store.setItem(nextKey, store.getItem(prevKey));
+      }
+      store.removeItem(prevKey);
+    } catch (e) {
+      /* private mode: the new key is still what later reads use */
+    }
+  }
+
+  /* Copy preferences saved under the old name, then drop that name. */
+  function migrateStoredNames() {
+    var pairs = [
+      [STORAGE_KEY, "tkrwallet.currency"],
+      [LEAVE_GAS_KEY, "tkrwallet.leave-gas-buffer"],
+      [AUTOLOCK_KEY, "tkrwallet.autolock"],
+      [CONNECT_AT_LAUNCH_KEY, "tkrwallet.connectAtLaunch"],
+      [VIEW_SESSION_KEY, "tkrwallet.view-session"],
+      [TOKENS_KEY, "tkrwallet.tokens"],
+    ];
+    var i;
+    for (i = 0; i < pairs.length; i++) {
+      moveStored(root.localStorage, pairs[i][0], pairs[i][1]);
+      moveStored(root.sessionStorage, pairs[i][0], pairs[i][1]);
+    }
+  }
+  migrateStoredNames();
   /* Auto-lock is a security floor, not a preference: it cannot be turned off
    * and the longest offered session is 1 hour. Default is 5 minutes. */
   var AUTOLOCK_OPTIONS = [1, 5, 15, 30, 60];
@@ -1808,7 +1841,7 @@
       a.textContent = spec.name + " explorer";
       explorers.appendChild(a);
     }
-    var data = root.tkrWalletData;
+    var data = root.laPurseData;
     var localP =
       session.watch || !session.walletId
         ? Promise.resolve([])
@@ -2093,7 +2126,7 @@
 
   /** Fiat value for one holding, or null when unpriced/unknown (renders —). */
   function unitPriceFor(holding, prices) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!prices || prices.state !== "ok" || !prices.prices) {
       return null;
     }
@@ -2108,7 +2141,7 @@
   }
 
   function usdPriceFor(holding, prices) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!prices || prices.state !== "ok" || !prices.prices || !holding) {
       return null;
     }
@@ -2124,7 +2157,7 @@
 
   /** Fiat value for one holding, or null when unpriced/unknown (renders —). */
   function fiatFor(holding, prices) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!wallet || !holding || holding.state !== "ok" || holding.amount === null) {
       return null;
     }
@@ -2208,7 +2241,7 @@
       if (!c || c.state === "ok") {
         return;
       }
-      var name = (root.tkrWalletData && root.tkrWalletData.chainName(c.chain_id)) || "chain " + c.chain_id;
+      var name = (root.laPurseData && root.laPurseData.chainName(c.chain_id)) || "chain " + c.chain_id;
       if (c.state === "unknown") {
         names.push(name + " could not be read" + (c.error ? " (" + c.error + ")" : ""));
       } else {
@@ -2229,8 +2262,8 @@
     }
     var logo = badge.querySelector("[data-token-logo]");
     var src =
-      root.tkrWalletData && root.tkrWalletData.tokenIconUrl
-        ? root.tkrWalletData.tokenIconUrl(chainId, address)
+      root.laPurseData && root.laPurseData.tokenIconUrl
+        ? root.laPurseData.tokenIconUrl(chainId, address)
         : null;
     if (!logo || !src) {
       if (logo) {
@@ -2276,7 +2309,7 @@
   }
 
   function splitCurrentHoldings(holdings, prices) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!wallet || !wallet.splitHoldings) {
       return { desk: holdings || [], airdrops: [] };
     }
@@ -2327,7 +2360,7 @@
 
   function signBuiltTx(tx, chainId) {
     var c = crypto();
-    var data = root.tkrWalletData;
+    var data = root.laPurseData;
     if (!sessionCanSign() || !c || !data) {
       return Promise.reject(new Error(session.watch ? "watch" : "locked"));
     }
@@ -2348,7 +2381,7 @@
   }
 
   function refreshPoolPositions() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var box = el("pool-positions");
     if (!wallet || typeof wallet.listPositions !== "function" || !box) {
       return;
@@ -2410,7 +2443,7 @@
   }
 
   function onPoolBuild(payload) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!wallet || typeof wallet.buildPool !== "function") {
       setPoolNote("Pools are unavailable.");
       return;
@@ -2443,7 +2476,7 @@
   }
 
   function onPoolSearch() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var box = el("pool-search-results");
     if (!wallet || typeof wallet.searchPools !== "function" || !box) {
       return;
@@ -2499,7 +2532,7 @@
   }
 
   function broadcastSend(chainId, to, atomic, token) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var from = Number(chainId) === 900001 ? session.solAddress : session.address;
     return wallet
       .buildSend({ chain_id: chainId, from: from, to: to, amount: atomic, token: token })
@@ -2528,7 +2561,7 @@
   var pendingEmpty = null;
 
   function onSendSubmit() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var c = crypto();
     if (!wallet || typeof wallet.buildSend !== "function" || !c) {
       setText(el("send-note"), "Send is unavailable.");
@@ -2610,7 +2643,7 @@
   }
 
   function onEmptyChain() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var c = crypto();
     if (!wallet || typeof wallet.buildSend !== "function" || !c) {
       setText(el("send-note"), "Send is unavailable.");
@@ -2644,7 +2677,7 @@
       return;
     }
     var key = Number(chainId) + ":" + to.toLowerCase();
-    var chainMeta = root.tkrWalletData && root.tkrWalletData.CHAINS[chainId];
+    var chainMeta = root.laPurseData && root.laPurseData.CHAINS[chainId];
     var chainName = (chainMeta && chainMeta.name) || ("chain " + chainId);
     if (!pendingEmpty || pendingEmpty.key !== key) {
       pendingEmpty = { key: key, chainId: chainId, to: to, plan: plan };
@@ -2804,7 +2837,7 @@
   }
 
   function runQuotedEvmSwap(fromChain, fromMint, toChain, toMint, amountHuman) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var c = crypto();
     var fromTok = fromMint && fromMint !== "native" ? fromMint : "native";
     var toTok = toMint && toMint !== "native" ? toMint : "native";
@@ -3026,7 +3059,7 @@
   }
 
   function onPoolAdd() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!wallet || typeof wallet.toAtomicAmount !== "function") {
       return;
     }
@@ -3061,7 +3094,7 @@
   }
 
   function rowsForDeskTab(holdings, prices) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var split = splitCurrentHoldings(holdings, prices);
     var tab = uiData.deskTab || "mine";
     if (tab === "airdrop") {
@@ -3239,7 +3272,7 @@
     }
     box.textContent = "";
     var q = String(query || "").trim();
-    var local = q && root.tkrWalletData ? root.tkrWalletData.searchCatalog(q, 20, readStoredTokens()) : [];
+    var local = q && root.laPurseData ? root.laPurseData.searchCatalog(q, 20, readStoredTokens()) : [];
     if (!q) {
       paintSearchHint(box, "", false);
       return [];
@@ -3250,11 +3283,11 @@
       paintSearchHint(box, q, false);
     }
     var seq = ++searchSeq;
-    if (!root.tkrWalletData || typeof root.tkrWalletData.searchTokens !== "function") {
+    if (!root.laPurseData || typeof root.laPurseData.searchTokens !== "function") {
       return local;
     }
     withBusy(function () {
-      return root.tkrWalletData.searchTokens(q, readStoredTokens());
+      return root.laPurseData.searchTokens(q, readStoredTokens());
     }, "Searching Scratchpost\u2026").then(function (remote) {
       if (seq !== searchSeq) {
         return;
@@ -3307,7 +3340,7 @@
   }
 
   function refreshValue() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var holdings = uiData.lastHoldings;
     if (!wallet || !holdings) {
       return;
@@ -3344,7 +3377,7 @@
   }
 
   function priceAssets() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var keys = Object.create(null);
     function addKey(k) {
       if (k) {
@@ -3401,7 +3434,7 @@
   }
 
   function refreshPrices() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!wallet || uiData.lastHoldings == null) {
       uiData.lastPrices = null;
       renderAll();
@@ -3515,8 +3548,8 @@
   function refreshAfterSwap(fromChain, toChain, destMint) {
     var before = holdingAmount(uiData.lastHoldings, toChain, destMint);
     var destName =
-      root.tkrWalletData && typeof root.tkrWalletData.chainName === "function"
-        ? root.tkrWalletData.chainName(toChain)
+      root.laPurseData && typeof root.laPurseData.chainName === "function"
+        ? root.laPurseData.chainName(toChain)
         : "destination";
     return refreshBalances().then(function again(attempt) {
       if (Number(fromChain) === Number(toChain)) {
@@ -3547,7 +3580,7 @@
 
   function refreshBalances(opts) {
     opts = opts || {};
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!wallet || !session.address) {
       return Promise.resolve(null);
     }
@@ -3638,8 +3671,6 @@
    * material, never anything from the vault. Discovery lists what you hold;
    * this is the miss path for a token Scratchpost did not index. */
 
-  var TOKENS_KEY = "tkrwallet.tokens";
-
   function readStoredTokens() {
     try {
       var raw = root.localStorage && root.localStorage.getItem(TOKENS_KEY);
@@ -3691,7 +3722,7 @@
   }
 
   function addToken(chainId, address) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var errNode = el("add-token-error");
     if (!wallet) {
       return Promise.resolve(null);
@@ -3707,7 +3738,7 @@
       showAddTokenError("That token is already in your list.");
       return Promise.resolve(null);
     }
-    var builtIn = ((root.tkrWalletData && root.tkrWalletData.TOKENS[chainId]) || []).some(function (t) {
+    var builtIn = ((root.laPurseData && root.laPurseData.TOKENS[chainId]) || []).some(function (t) {
       return t.address && t.address.toLowerCase() === addr.toLowerCase();
     });
     if (builtIn) {
@@ -3778,7 +3809,7 @@
   /** Catalogue/custom metadata for an asset, when we have it offline. */
   function metaFor(chainId, asset) {
     if (!asset) {
-      var chain = root.tkrWalletData && root.tkrWalletData.CHAINS[chainId];
+      var chain = root.laPurseData && root.laPurseData.CHAINS[chainId];
       return { symbol: chain ? chain.native : "?", name: chain ? chain.name + " native token" : "", decimals: 18 };
     }
     var custom = readStoredTokens().filter(function (t) {
@@ -3787,7 +3818,7 @@
     if (custom) {
       return custom;
     }
-    var list = (root.tkrWalletData && root.tkrWalletData.TOKENS[chainId]) || [];
+    var list = (root.laPurseData && root.laPurseData.TOKENS[chainId]) || [];
     for (var i = 0; i < list.length; i++) {
       if (list[i].address && list[i].address.toLowerCase() === String(asset).toLowerCase()) {
         return list[i];
@@ -3912,12 +3943,12 @@
     var meta = metaFor(route.chainId, route.asset);
     var symbol = (holding && holding.symbol) || (meta && meta.symbol) || shortAddress(route.asset, 6, 4);
     var name = (meta && meta.name) || (holding && holding.symbol) || "Token";
-    var chainName = (root.tkrWalletData && root.tkrWalletData.chainName(route.chainId)) || "chain " + route.chainId;
+    var chainName = (root.laPurseData && root.laPurseData.chainName(route.chainId)) || "chain " + route.chainId;
     var probe = holding || {
       chain_id: route.chainId,
       address: route.asset,
       symbol: symbol,
-      color: root.tkrWalletData && root.tkrWalletData.colorFor(symbol),
+      color: root.laPurseData && root.laPurseData.colorFor(symbol),
       state: "ok",
       amount: 0,
     };
@@ -3928,7 +3959,7 @@
     paintTokenBadge(
       el("detail-badge"),
       symbol,
-      (holding && holding.color) || (root.tkrWalletData && root.tkrWalletData.colorFor(symbol)),
+      (holding && holding.color) || (root.laPurseData && root.laPurseData.colorFor(symbol)),
       route.chainId,
       route.asset
     );
@@ -4511,7 +4542,7 @@
       paintConnectIp("", "");
       return;
     }
-    var data = root.tkrWalletData;
+    var data = root.laPurseData;
     if (!data || typeof data.getSessionMe !== "function") {
       return;
     }
@@ -4526,7 +4557,7 @@
   }
 
   function dropEdgeSession() {
-    var data = root.tkrWalletData;
+    var data = root.laPurseData;
     edgeConnected = false;
     paintConnectIp("", "");
     if (session.address) {
@@ -5082,7 +5113,7 @@
   }
 
   function refreshPendingSigns() {
-    var data = root.tkrWalletData;
+    var data = root.laPurseData;
     if (!data || typeof data.listPendingSigns !== "function") {
       return;
     }
@@ -5105,7 +5136,7 @@
   }
 
   function onConfirmSign() {
-    var data = root.tkrWalletData;
+    var data = root.laPurseData;
     var c = crypto();
     if (!sessionCanSign() || !data || !c || typeof data.broadcastRaw !== "function") {
       if (session.watch) {
@@ -5139,7 +5170,7 @@
   }
 
   function onConnect() {
-    var data = root.tkrWalletData;
+    var data = root.laPurseData;
     var c = crypto();
     if (!sessionCanSign() || !session.address) {
       if (session.watch) {
@@ -5197,7 +5228,7 @@
   function fillSwapPairs() {
     var from = el("swap-from");
     var to = el("swap-to");
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     if (!from || !to || !wallet || !wallet.TOKENS) {
       return;
     }
@@ -5577,7 +5608,7 @@
     if (!pendingSwapQuote || !pendingSwapQuote.body) {
       return;
     }
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var from = pendingSwapQuote.from;
     var to = pendingSwapQuote.to;
     var body = pendingSwapQuote.body;
@@ -5652,7 +5683,7 @@
   }
 
   function selectedSwapToken(selectEl) {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var value = selectEl ? String(selectEl.value || "") : "";
     var bits = value.split(":");
     var chainId = Number(bits[0]);
@@ -5924,7 +5955,7 @@
   function onSwapQuote(opts) {
     opts = opts || {};
     var openDialog = opts.openDialog !== false;
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     pendingSwapQuote = null;
     clearQuoteTimer();
     hideSwapEstimate();
@@ -6042,7 +6073,7 @@
   }
 
   function onSwapSubmit() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var c = crypto();
     if (!pendingSwapQuote || !pendingSwapQuote.body || !pendingSwapQuote.body.quote) {
       setText(el("swap-note"), "Quote first. Nothing was signed.");
@@ -6187,7 +6218,7 @@
   }
 
   function onDisconnect() {
-    var data = root.tkrWalletData;
+    var data = root.laPurseData;
     if (!data || typeof data.disconnectSession !== "function") {
       setWalletStatus("Disconnect is unavailable in this browser.");
       return;
@@ -6941,7 +6972,7 @@
   /* Preview mode: opt-in via ?preview=1, clearly labelled, sample data only.
    * Never triggered in normal use; production paths never read it. */
   function maybePreview() {
-    var wallet = root.tkrWalletData;
+    var wallet = root.laPurseData;
     var q = (root.location && root.location.search) || "";
     if (!wallet || !/(^|[?&])preview=1([&#]|$)/.test(q)) {
       return false;
@@ -7088,7 +7119,7 @@
   if (typeof module === "object" && module.exports) {
     module.exports = api;
   } else {
-    root.tkrWalletUI = api;
+    root.laPurseUI = api;
     if (typeof document !== "undefined") {
       /* Popup vs side panel vs PWA: see parseShellMode / tools/src/app.css. */
       try {
