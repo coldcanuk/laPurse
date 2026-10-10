@@ -2747,6 +2747,7 @@ test("desk UX: airdrops submenu, receive QR, send contacts, live quote estimate"
     "id=\"swap-quote-timer\"",
     "id=\"swap-quote-accept\"",
     "id=\"swap-progress\"",
+    "id=\"detail-favorite\"",
   ].forEach(function (n) {
     assert.ok(html.indexOf(n) !== -1, "index.html must include " + n);
   });
@@ -2755,6 +2756,12 @@ test("desk UX: airdrops submenu, receive QR, send contacts, live quote estimate"
   assert.ok(html.indexOf("This is an estimate from Scratchpost") !== -1);
   assert.ok(html.indexOf("Tap to review and Accept quote") !== -1);
   assert.ok(ui.indexOf("openQuoteDialog") !== -1);
+  assert.ok(ui.indexOf("lapurse.favorites") !== -1, "favorites persist on this device");
+  assert.ok(ui.indexOf("function toggleFavorite") !== -1, "a token can be saved and removed");
+  const deploy = readFile(".github/workflows/deploy-main.yml");
+  assert.ok(deploy.indexOf("deploy/nginx/wallet-edge.conf.template") !== -1, "deploy gate uses the renamed vhost");
+  assert.ok(deploy.indexOf("tkrwallet-edge.conf.template") === -1, "deploy gate must not name the old vhost");
+  assert.ok(deploy.indexOf("/opt/repo/lapurse-pwa") !== -1, "deploy ships to the laPurse tree");
   assert.ok(ui.indexOf("startQuoteTimer") !== -1);
   assert.ok(ui.indexOf("acceptSwapQuote") !== -1, "quote sheet must gate Swap Now behind Accept");
   assert.ok(ui.indexOf("paintSwapProgress") !== -1, "swap steps must be visible");

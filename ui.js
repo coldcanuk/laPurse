@@ -23,6 +23,7 @@
   var CONNECT_AT_LAUNCH_KEY = "lapurse.connectAtLaunch";
   var VIEW_SESSION_KEY = "lapurse.view-session";
   var TOKENS_KEY = "lapurse.tokens";
+  var FAVORITES_KEY = "lapurse.favorites";
 
   function moveStored(store, nextKey, prevKey) {
     if (!store) {
@@ -2285,6 +2286,58 @@
     logo.src = src;
   }
 
+  function favoriteKey(chainId, asset) {
+    var key = asset == null || asset === "" || asset === "native" ? "native" : String(asset).toLowerCase();
+    return String(chainId) + ":" + key;
+  }
+
+  function readFavorites() {
+    try {
+      var raw = root.localStorage && root.localStorage.getItem(FAVORITES_KEY);
+      var list = raw ? JSON.parse(raw) : [];
+      return Array.isArray(list) ? list : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeFavorites(list) {
+    try {
+      if (root.localStorage) {
+        root.localStorage.setItem(FAVORITES_KEY, JSON.stringify(list.slice(0, 50)));
+      }
+    } catch (e) {
+      /* private mode: the star still flips for this view */
+    }
+  }
+
+  function isFavorite(chainId, asset) {
+    return readFavorites().indexOf(favoriteKey(chainId, asset)) !== -1;
+  }
+
+  function toggleFavorite(chainId, asset) {
+    var key = favoriteKey(chainId, asset);
+    var list = readFavorites().filter(function (item) {
+      return item !== key;
+    });
+    var on = !isFavorite(chainId, asset);
+    if (on) {
+      list.unshift(key);
+    }
+    writeFavorites(list);
+    return on;
+  }
+
+  function paintFavorite(chainId, asset) {
+    var btn = el("detail-favorite");
+    if (!btn) {
+      return;
+    }
+    var on = isFavorite(chainId, asset);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    btn.textContent = on ? "Favorited" : "Favorite";
+  }
+
   function fillTokenRow(holding, prices) {
     var tpl = el("tpl-token-row");
     if (!tpl) {
@@ -2295,7 +2348,10 @@
     row.addEventListener("click", function () {
       goToken(holding.chain_id, holding.address);
     });
-    setText(row.querySelector("[data-token-name]"), holding.symbol || "?");
+    setText(
+      row.querySelector("[data-token-name]"),
+      (isFavorite(holding.chain_id, holding.address) ? "\u2605 " : "") + (holding.symbol || "?")
+    );
     setText(
       row.querySelector("[data-token-amount]"),
       holding.state === "unknown" ? "\u2014" : formatHeld(holding.amount)
@@ -2341,7 +2397,11 @@
       box.appendChild(empty);
       return;
     }
-    rows.forEach(function (holding) {
+    rows.slice().sort(function (a, b) {
+      var af = isFavorite(a.chain_id, a.address) ? 0 : 1;
+      var bf = isFavorite(b.chain_id, b.address) ? 0 : 1;
+      return af - bf;
+    }).forEach(function (holding) {
       var row = fillTokenRow(holding, prices);
       if (row) {
         box.appendChild(row);
@@ -3921,7 +3981,7 @@
 
   function stampDetailActions(chainId, asset) {
     var key = asset || "native";
-    ["detail-buy", "detail-send", "detail-swap"].forEach(function (id) {
+    ["detail-buy", "detail-send", "detail-swap", "detail-favorite"].forEach(function (id) {
       var btn = el(id);
       if (btn) {
         btn.setAttribute("data-chain", String(chainId));
@@ -3953,6 +4013,7 @@
       amount: 0,
     };
 
+    paintFavorite(route.chainId, route.asset);
     setText(el("detail-heading"), symbol);
     setText(el("detail-name"), name);
     setText(el("detail-chain"), chainName);
@@ -6857,6 +6918,16 @@
     if (detailSwap) {
       detailSwap.addEventListener("click", function () {
         openSwapFor(Number(detailSwap.getAttribute("data-chain")), detailAsset(detailSwap), "from");
+      });
+    }
+    var detailFavorite = el("detail-favorite");
+    if (detailFavorite) {
+      detailFavorite.addEventListener("click", function () {
+        var chainId = Number(detailFavorite.getAttribute("data-chain"));
+        var asset = detailAsset(detailFavorite);
+        toggleFavorite(chainId, asset);
+        paintFavorite(chainId, asset);
+        renderTokens(uiData.lastHoldings, uiData.lastPrices);
       });
     }
     var fxLive = el("fx-live");

@@ -45,8 +45,8 @@ jobs:
       # Desch soft-PASS gates, enforced read-only before any deploy bytes move.
       - name: Desch gates (connect-src, no key material)
         run: |
-          grep -q "connect-src 'self'" deploy/nginx/tkrwallet-edge.conf.template
-          if grep -Eo "connect-src[^;\"]*" deploy/nginx/tkrwallet-edge.conf.template | grep -qv "connect-src 'self'"; then
+          grep -q "connect-src 'self'" deploy/nginx/wallet-edge.conf.template
+          if grep -Eo "connect-src[^;\"]*" deploy/nginx/wallet-edge.conf.template | grep -qv "connect-src 'self'"; then
             echo "GATE FAIL: connect-src widened beyond 'self'" >&2
             exit 1
           fi
@@ -83,6 +83,6 @@ jobs:
             --exclude '.worktrees/' \
             --exclude 'deploy/swarm/' \
             --exclude 'tools/.npm-cache/' \
-            "$SRC/" chuck@caesar.local:/opt/repo/tkrwallet-pwa/
+            "$SRC/" chuck@caesar.local:/opt/repo/lapurse-pwa/
           ssh -o BatchMode=yes chuck@caesar.local \
-            'cd /opt/repo/thePlatform/blockchain-infrastructure/wallet-edge && WALLET_ROOT=/opt/repo/tkrwallet-pwa ./apply.sh'
+            'cd /opt/repo/thePlatform/blockchain-infrastructure/wallet-edge && WALLET_ROOT=/opt/repo/lapurse-pwa ./apply.sh'
