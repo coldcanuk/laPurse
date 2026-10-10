@@ -1,6 +1,6 @@
-# tkrWallet
+# laPurse
 
-GPLv3, self-custody customer wallet for the **Scratchpost** stack. PWA and
+GPLv3, self-custody customer wallet for **leSou**. The shell is the GrenDex desk: paper, ink, and a typewriter masthead. PWA and
 Chrome extension (MV3) from one tree. It is a client signer, not a custodian —
 it never holds keys, never auto-executes, and never shops vendors.
 
@@ -96,7 +96,7 @@ and remediations): [`docs/reviews/2026-09-14-technical-review.md`](docs/reviews/
 
 ## Wallet custody model
 
-tkrWallet is **non-custodial**: the recovery phrase is never sent anywhere, only
+laPurse is **non-custodial**: the recovery phrase is never sent anywhere, only
 its ciphertext is persisted, and the private key exists in memory only while the
 wallet is unlocked. The crypto surface is a committed, reproducible bundle of
 audited libraries (`vendor/noble.js`), and the whole pipeline is locked by the
@@ -145,16 +145,16 @@ from `/opt/repo` — the xdg-document portal dies with
 `bwrap: Can't find source path /run/user/1000/doc/by-app/…`.
 
 ```sh
-cd /opt/repo/thePlatform/tkrWallet
+cd /opt/repo/thePlatform/laPurse
 git pull
 ./scripts/stage-unpacked.sh
 ```
 
-Then chrome://extensions and brave://extensions → Remove tkrWallet →
+Then chrome://extensions and brave://extensions → Remove laPurse →
 Load unpacked → `/home/chuck/tkrWallet-unpacked`. Do not pick `/opt/repo`
 in the file dialog.
 
-The home card must read **tkrWallet 0.10.40**. If it does not, the browser
+The home card must read **laPurse 0.10.40**. If it does not, the browser
 is not this tree. Site access for `wallet.scratchpost.ai` must not be
 “On click”.
 
@@ -167,7 +167,7 @@ CRX into `/opt/repo`. If only Flatpak is installed it stages
 `$HOME/tkrWallet-unpacked` and stops.
 
 ```sh
-cd /opt/repo/thePlatform/tkrWallet
+cd /opt/repo/thePlatform/laPurse
 git pull
 ./scripts/pack-crx.sh
 ```

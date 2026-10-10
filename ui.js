@@ -1,4 +1,4 @@
-/* tkrWallet — UI shell.
+/* laPurse — UI shell.
  *
  * Scope of this file: navigation, currency toggle, and rendering primitives.
  * It holds NO wallet data logic and makes NO network calls; the data layer
@@ -98,7 +98,7 @@
       return "This page is not allowed to use the camera.";
     }
     if (name === "NotAllowedError" || name === "PermissionDeniedError" || name === "PermissionDismissedError") {
-      return "Camera permission was denied. Allow the camera for tkrWallet and try Scan QR again.";
+      return "Camera permission was denied. Allow the camera for laPurse and try Scan QR again.";
     }
     return "The camera could not be opened.";
   }
@@ -273,7 +273,7 @@
   }
 
   var CLI_HELP = [
-    "tkrWallet CLI. Secrets are never printed.",
+    "laPurse CLI. Secrets are never printed.",
     "help              this list",
     "status            lock state and public account",
     "home | search | settings | accounts | swap | activity",
@@ -765,7 +765,7 @@
     }
     var log = el("terminal-log");
     if (log && !log.firstChild) {
-      appendTerminalLine("out", "tkrWallet CLI. Type help. Secrets are never printed.");
+      appendTerminalLine("out", "laPurse CLI. Type help. Secrets are never printed.");
     }
     term.removeAttribute("hidden");
     var input = el("terminal-input");
@@ -1186,7 +1186,7 @@
       }
       ctx.fillStyle = "#faf8f2";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#12100e";
+      ctx.fillStyle = "#1c1a16";
       var y;
       var x;
       for (y = 0; y < size; y++) {
@@ -2417,7 +2417,7 @@
     }
     if (!sessionCanSign()) {
       if (session.watch) {
-        setPoolNote("This is a watch address. tkrWallet does not hold its key. Nothing was signed.");
+        setPoolNote("This is a watch address. laPurse does not hold its key. Nothing was signed.");
         return;
       }
       openGate("unlock");
@@ -2536,7 +2536,7 @@
     }
     if (!sessionCanSign()) {
       if (session.watch) {
-        setText(el("send-note"), "This is a watch address. tkrWallet does not hold its key. Nothing was signed.");
+        setText(el("send-note"), "This is a watch address. laPurse does not hold its key. Nothing was signed.");
         return;
       }
       openGate("unlock");
@@ -2618,7 +2618,7 @@
     }
     if (!sessionCanSign()) {
       if (session.watch) {
-        setText(el("send-note"), "This is a watch address. tkrWallet does not hold its key. Nothing was signed.");
+        setText(el("send-note"), "This is a watch address. laPurse does not hold its key. Nothing was signed.");
         return;
       }
       openGate("unlock");
@@ -4450,7 +4450,7 @@
           var url = URL.createObjectURL(blob);
           var a = document.createElement("a");
           a.href = url;
-          a.download = "tkrwallet-config.yaml";
+          a.download = "lapurse-config.yaml";
           a.rel = "noopener";
           document.body.appendChild(a);
           a.click();
@@ -4463,7 +4463,7 @@
             }
           }, 1000);
         }
-        setText(el("settings-config-backup-status"), "Downloaded tkrwallet-config.yaml.");
+        setText(el("settings-config-backup-status"), "Downloaded lapurse-config.yaml.");
         setWalletStatus("Configuration YAML downloaded. Keys were not included.");
         return yaml;
       })
@@ -5109,7 +5109,7 @@
     var c = crypto();
     if (!sessionCanSign() || !data || !c || typeof data.broadcastRaw !== "function") {
       if (session.watch) {
-        setWalletStatus("This is a watch address. tkrWallet does not hold its key. Nothing was signed.");
+        setWalletStatus("This is a watch address. laPurse does not hold its key. Nothing was signed.");
         return;
       }
       setWalletStatus("Unlock and Connect first.");
@@ -5452,7 +5452,7 @@
     }
     setText(
       el("send-note"),
-      "Open tkrWallet in a browser tab to scan a QR. The toolbar popup cannot ask for the camera."
+      "Open laPurse in a browser tab to scan a QR. The toolbar popup cannot ask for the camera."
     );
     return false;
   }
@@ -6062,7 +6062,7 @@
       setText(
         el("swap-note"),
         session.watch
-          ? "This is a watch address. tkrWallet does not hold its key. Nothing was signed."
+          ? "This is a watch address. laPurse does not hold its key. Nothing was signed."
           : "Unlock the wallet first. Nothing was signed."
       );
       return;

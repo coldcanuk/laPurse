@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "tkrWallet",
+  "name": "laPurse",
   "version": "0.10.40",
-  "description": "Self-custody wallet for Scratchpost. You hold the keys.",
+  "description": "Self-custody wallet for leSou. You hold the keys.",
   "action": {
     "default_popup": "index.html",
-    "default_title": "tkrWallet",
+    "default_title": "laPurse",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

@@ -585,7 +585,7 @@ test("auto-lock settings: fixed options only, never off, longest is 1 hour", fun
   const uiSrc = readFile("ui.js");
   assert.ok(uiSrc.indexOf("function downloadConfigBackup") !== -1, "config backup must be an explicit function");
   assert.ok(uiSrc.indexOf("buildConfigBackup") !== -1, "settings backup must emit YAML from store");
-  assert.ok(uiSrc.indexOf('download = "tkrwallet-config.yaml"') !== -1 || uiSrc.indexOf('download = "tkrwallet-config.yml"') !== -1, "backup file is YAML");
+  assert.ok(uiSrc.indexOf('download = "lapurse-config.yaml"') !== -1 || uiSrc.indexOf('download = "lapurse-config.yml"') !== -1, "backup file is YAML");
   const ui = readFile("ui.js");
   ["lockNow", "scheduleLock", "resetActivity", "visibilitychange", "readStoredAutolock"].forEach(function (fn) {
     assert.ok(ui.indexOf(fn) !== -1, "ui.js must implement " + fn);
@@ -611,7 +611,7 @@ test("extension popup keeps scrolling inside the shell, never on the document", 
   assert.ok(htmlBoot.indexOf('src="./shell.js"') !== -1, "popup class must land before CSS");
   assert.ok(htmlBoot.indexOf("./shell.js") < htmlBoot.indexOf("./app.css"), "shell.js must precede app.css");
   assert.ok(/<html[^>]*class="[^"]*extension-popup/.test(htmlBoot), "popup size must be in the HTML, not after JS");
-  assert.ok(htmlBoot.indexOf("tkrWallet 0.10.40") !== -1, "home/settings must show the running build");
+  assert.ok(htmlBoot.indexOf("laPurse 0.10.40") !== -1, "home/settings must show the running build");
   assert.ok(/height:\s*580px/.test(css), "popup document must stay under Chromium's 600 clamp");
   assert.ok(/width:\s*540px/.test(css), "toolbar popup width is 432px + 25%");
   assert.ok(!/width:\s*432px/.test(css), "432px popup width must be gone");
@@ -894,7 +894,7 @@ test("brand ramp is warm — no Phantom violet in the token palette", function (
 test("iOS safe areas and dark theme", function () {
   const html = readFile("index.html");
   assert.ok(html.indexOf("viewport-fit=cover") !== -1, "viewport-fit=cover required");
-  assert.ok(html.indexOf('content="#12100e"') !== -1, "theme-color must match the dark base");
+  assert.ok(html.indexOf('content="#efe4cc"') !== -1, "theme-color must match the GrenDex paper");
 });
 
 test("no inline <script>: MV3 blocks it and cannot be relaxed", function () {
@@ -1025,8 +1025,8 @@ test("kiff pack stays in HOME and never uses Flatpak as the packer", function ()
 
 test("PWA manifest colours match the dark theme", function () {
   const wm = JSON.parse(readFile("manifest.webmanifest"));
-  assert.strictEqual(wm.background_color, "#12100e");
-  assert.strictEqual(wm.theme_color, "#12100e");
+  assert.strictEqual(wm.background_color, "#efe4cc");
+  assert.strictEqual(wm.theme_color, "#efe4cc");
 });
 
 test("PWA description is clean", function () {
@@ -1068,7 +1068,7 @@ test("service worker never caches API responses", function () {
   const sw = readFile("sw.js");
   // Balances/prices must never come out of a cache — a stale balance is a lie.
   assert.ok(sw.indexOf('url.pathname.indexOf("/api/") === 0') !== -1, "missing /api/ bypass");
-  assert.ok(sw.indexOf('"tkrwallet-v35"') !== -1, "cache version must bump so the new worker activates");
+  assert.ok(sw.indexOf('"tkrwallet-v36"') !== -1, "cache version must bump so the new worker activates");
   assert.ok(sw.indexOf("./shell.js") !== -1, "sw must precache shell.js");
 });
 
