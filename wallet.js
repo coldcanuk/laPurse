@@ -1004,6 +1004,6 @@
   if (typeof module === "object" && module.exports) {
     module.exports = api;
   } else {
-    root.tkrWalletData = api;
+    root.laPurseData = api;
   }
 })(typeof globalThis !== "undefined" ? globalThis : this);

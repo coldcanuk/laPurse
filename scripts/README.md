@@ -1,6 +1,6 @@
 # Wallet generators
 
-These scripts generate chain identities for tkrWallet users and for the
+These scripts generate chain identities for laPurse users and for the
 platform fee sink. They are operator tools, not a browser click-path.
 
 Canonical copies live here. Workstation copies under `~/scripts/new_*_wallet.sh`
@@ -27,7 +27,7 @@ OUTFILE="$HOME/.config/tkrwallet/users/example.json" \
 desktop keyring. Do not commit JSON outfiles. Do not put private keys in git
 or in IcePike.
 
-User wallets that tkrWallet itself creates still happen **on the device**
+User wallets that laPurse itself creates still happen **on the device**
 (IndexedDB AES-GCM vault). These scripts are the operator path for platform
 and provisioned identities.
 
@@ -41,7 +41,7 @@ That address is the swap-fee destination once Scratchpost `swap/build` exists.
 The public address is published at
 `blockchain-infrastructure/shared/wallet/platform_fee_recipient.v1.yaml`.
 Until skim is live the ciphertext sits in Vault and no route sends it tokens.
-Do not import this key into a customer tkrWallet. Do not reuse ATA rails or
+Do not import this key into a customer laPurse. Do not reuse ATA rails or
 trading wallets.
 
 ## LeSou L3 EVM wallets
@@ -62,7 +62,7 @@ storage paths. Refuse to overwrite an existing pass leaf or backup file.
 ## Chrome CRX private key
 
 Run `pack-crx.sh` on **kiff**. It SSHs to ATHENA for Vault unseal/checkout,
-packs with local Brave (Pop Shop deb or Flathub), writes `$HOME/tkrwallet.crx`,
+packs with local Brave (Pop Shop deb or Flathub), writes `$HOME/laPurse.crx`,
 and shreds the Vault checkout PEM on exit. Chrome UI may also write
-`$HOME/tkrWallet-chrome-extension-kfgmpcgplemjepolfpdbodmakceacook.pem`; the
+`$HOME/laPurse-chrome-extension-kfgmpcgplemjepolfpdbodmakceacook.pem`; the
 script sleeps 5 minutes then `shred -u` that exact file.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Checkout the tkrWallet CRX private PEM from ATHENA Vault onto tmpfs, pack,
+# Checkout the laPurse CRX private PEM from ATHENA Vault onto tmpfs, pack,
 # then shred. Never prints the PEM. Never writes it into the git tree.
 #
 # First store (on ATHENA, once, CAS=0 — will not overwrite):
@@ -10,7 +10,7 @@
 #   ./scripts/checkout-crx-key.sh
 # Chrome → Extensions → Pack extension → private key file = the printed path.
 # Waits 5 minutes, then shreds the checkout and
-# $HOME/tkrWallet-chrome-extension-<id>.pem. Ctrl-C still shreds.
+# $HOME/laPurse-chrome-extension-<id>.pem. Ctrl-C still shreds.
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -18,9 +18,9 @@ ROOT="$(cd "$HERE/.." && pwd)"
 VAULT_OPS="${VAULT_OPS:-/opt/repo/thePlatform/blockchain-infrastructure/host/vault/vault_ops.py}"
 VAULT_PATH="${VAULT_PATH:-tkrwallet/crx/key.pem}"
 ATHENA_HOST="${ATHENA_HOST:-athena.local}"
-OUTFILE="${OUTFILE:-/dev/shm/tkrwallet-crx-key.$$.pem}"
+OUTFILE="${OUTFILE:-/dev/shm/lapurse-crx-key.$$.pem}"
 CRX_ID="kfgmpcgplemjepolfpdbodmakceacook"
-CHROME_PEM="$HOME/tkrWallet-chrome-extension-${CRX_ID}.pem"
+CHROME_PEM="$HOME/laPurse-chrome-extension-${CRX_ID}.pem"
 
 die() { echo "error: $*" >&2; exit 1; }
 info() { echo "→ $*" >&2; }

@@ -1,4 +1,4 @@
-# tkrWallet / wallet-edge Swarm stub — Phase A.
+# laPurse / wallet-edge Swarm stub — Phase A.
 # wallet-edge compose remains on caesar until caesar is a Swarm worker.
 # CF bind secrets ae__bi__scratchpost__cf__* are seeded on athena (manager).
 # After worker join: deploy this stack with placement node.labels.role==caesar.

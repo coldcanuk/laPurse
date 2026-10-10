@@ -210,7 +210,7 @@ test("copyTextToClipboard paints the note and button after a successful write", 
 });
 
 test("chainProblems includes the edge error for Robinhood", function () {
-  global.tkrWalletData = require("./wallet.js");
+  global.laPurseData = require("./wallet.js");
   const ui = require("./ui.js");
   const msg = ui.chainProblems({
     chains: [{ chain_id: 4663, state: "unknown", error: "unsupported chain" }],
@@ -492,7 +492,8 @@ test("parseViewSession restores a fresh viewing session and rejects an expired o
 
 test("reload keeps the viewing session; lock and expiry do not; keys never land in it", function () {
   const ui = readFile("ui.js");
-  assert.ok(ui.indexOf("tkrwallet.view-session") !== -1, "viewing session has a dedicated key");
+  assert.ok(ui.indexOf("lapurse.view-session") !== -1, "viewing session has a dedicated key");
+  assert.ok(ui.indexOf("tkrwallet.view-session") !== -1, "old viewing session is copied once");
   assert.ok(ui.indexOf("sessionStorage") !== -1, "PWA reload still uses sessionStorage, not a second IndexedDB vault");
   assert.ok(ui.indexOf("function viewSessionStore") !== -1, "MV3 popup vs PWA must pick different stores");
   assert.ok(ui.indexOf("chromeExtensionDocument") !== -1, "chrome-extension pages must not rely on popup sessionStorage");
@@ -1013,12 +1014,12 @@ test("the CRX private key is ignored and never tracked", function () {
 
 test("kiff pack stays in HOME and never uses Flatpak as the packer", function () {
   const sh = readFile("scripts/pack-crx.sh");
-  assert.ok(sh.indexOf("tkrWallet-unpacked") !== -1, "Flatpak path must stage $HOME/tkrWallet-unpacked");
+  assert.ok(sh.indexOf("laPurse-unpacked") !== -1, "Flatpak path must stage $HOME/laPurse-unpacked");
   assert.ok(sh.indexOf("HOME_CRX") !== -1, "a CRX must land in $HOME");
   assert.ok(sh.indexOf("REPO_CRX") === -1, "do not write a CRX into /opt/repo");
   assert.ok(sh.indexOf("flatpak run") === -1, "Flatpak --pack-extension dies in the document portal");
   const staged = readFile("scripts/stage-unpacked.sh");
-  assert.ok(staged.indexOf("${HOME}/tkrWallet-unpacked") !== -1);
+  assert.ok(staged.indexOf("${HOME}/laPurse-unpacked") !== -1);
 });
 
 /* ── manifest.webmanifest: the PWA ──────────────────────────────────────── */
@@ -1068,7 +1069,7 @@ test("service worker never caches API responses", function () {
   const sw = readFile("sw.js");
   // Balances/prices must never come out of a cache — a stale balance is a lie.
   assert.ok(sw.indexOf('url.pathname.indexOf("/api/") === 0') !== -1, "missing /api/ bypass");
-  assert.ok(sw.indexOf('"tkrwallet-v36"') !== -1, "cache version must bump so the new worker activates");
+  assert.ok(sw.indexOf('"lapurse-v1"') !== -1, "cache version must bump so the new worker activates");
   assert.ok(sw.indexOf("./shell.js") !== -1, "sw must precache shell.js");
 });
 
@@ -1094,7 +1095,7 @@ test("service worker precaches the data layer", function () {
 
 test("shell controller talks to the data layer, and still never fetches", function () {
   const src = readFile("ui.js");
-  assert.ok(src.indexOf("tkrWalletData") !== -1, "ui.js must route through the data layer");
+  assert.ok(src.indexOf("laPurseData") !== -1, "ui.js must route through the data layer");
 });
 
 test("the injected-provider connect path is gone — self-custody only", function () {
@@ -1233,7 +1234,7 @@ test("getBalances() keeps a 502 body that still reports chains", function () {
 });
 
 test("mergeBalanceReads names Solana when the SOL HTTP call has no chains[]", function () {
-  global.tkrWalletData = require("./wallet.js");
+  global.laPurseData = require("./wallet.js");
   const ui = require("./ui.js");
   const merged = ui.mergeBalanceReads(
     {
@@ -1736,7 +1737,7 @@ test("store: YAML config backup is public-only and includes labels, groups, pref
       },
     ],
   });
-  assert.ok(yaml.indexOf("tkrwallet_config: 1") !== -1);
+  assert.ok(yaml.indexOf("lapurse_config: 1") !== -1);
   assert.ok(yaml.indexOf("exported_at:") !== -1);
   assert.ok(yaml.indexOf("autolock_minutes: 15") !== -1);
   assert.ok(yaml.indexOf("connect_at_launch: true") !== -1);
@@ -2423,7 +2424,7 @@ test("quoteSwap and buildSwap POST the real edge paths and return the quote body
 test("crypto: signPersonal signs a connect statement and recovers the HD address", function () {
   const c = require("./crypto.js");
   const phrase = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about";
-  const statement = "Connect to tkrWallet.\nNonce: aabbcc";
+  const statement = "Connect to laPurse.\nNonce: aabbcc";
   const signed = c.signPersonal(phrase, 0, statement);
   assert.strictEqual(signed.address, "0x9858EfFD232B4033E47d90003D41EC34EcaEda94");
   assert.ok(/^0x[0-9a-f]{130}$/.test(signed.signature));
