@@ -21,7 +21,7 @@ sed -e 's|{{SSL_FULLCHAIN}}|/etc/nginx/certs/wallet.fullchain.pem|' \
     -e 's|{{SSL_PRIVKEY}}|/etc/nginx/certs/wallet.key|' \
     -e 's|{{CF_ORIGIN_PULL_CA}}|/etc/nginx/certs/cf-origin-pull-ca.pem|' \
     -e 's|{{FACADE_UPSTREAM}}|http://127.0.0.1:8089|' \
-    -e 's|{{WALLET_ROOT}}|/srv/tkrwallet|' \
+    -e 's|{{WALLET_ROOT}}|/srv/lapurse|' \
     nginx/wallet-edge.conf.template \
     > /etc/nginx/sites-available/wallet-edge
 
